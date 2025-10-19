@@ -4,6 +4,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] CharacterController controller;
     [SerializeField] float speed;
+    [SerializeField] float sprintMod;
 
     private Vector3 moveDir;
 
@@ -25,5 +26,21 @@ public class PlayerController : MonoBehaviour
     {
         moveDir = Input.GetAxis("Horizontal") * transform.right + Input.GetAxis("Vertical") * transform.forward;
         controller.Move(moveDir * speed * Time.deltaTime);
+
+        Sprint();
+    }
+
+    void Sprint()
+    {
+        if (Input.GetButtonDown("Sprint"))
+        {
+            isSprinting = true;
+            speed *= sprintMod;
+        }
+        else if (Input.GetButtonUp("Sprint"))
+        {
+            isSprinting = false;
+            speed /= sprintMod;
+        }
     }
 }
