@@ -1,12 +1,13 @@
 using System.Diagnostics;
 using UnityEngine;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] CharacterController controller;
     [SerializeField] Camera playerCamera;
-    [SerializeField] int health;
-    [SerializeField] int stamina;
+    [SerializeField] float health;
+    [SerializeField] float stamina;
     [SerializeField] float speed;
     [SerializeField] float sprintMod;
     [SerializeField] float crouchMod;
@@ -21,19 +22,23 @@ public class PlayerController : MonoBehaviour
     private Vector3 playerCrouchingCenter;
     private Vector3 cameraOriginalPos;
     private Vector3 cameraCrouchingPos;
+    private Coroutine staminaRechargeCoroutine;
 
     bool isSprinting;
     bool isCrouching;
+    bool isRecharging;
 
     int jumpCount;
-    int healthOrig;
-    int staminaOrig;
+    float healthOrig;
+    float staminaOrig;
+    float baseSpeed;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         healthOrig = health;
         staminaOrig = stamina;
+        baseSpeed = speed;
         playerOriginalCenter = controller.center;
         playerCrouchingCenter = new Vector3(0, -.5f, 0);
         cameraOriginalPos = playerCamera.transform.localPosition;
@@ -75,16 +80,58 @@ public class PlayerController : MonoBehaviour
 
     void Sprint()
     {
-        if (Input.GetButtonDown("Sprint"))
+        if (Input.GetButton("Sprint") && stamina > 0)
         {
             isSprinting = true;
-            speed *= sprintMod;
+            stamina -= 20f * Time.deltaTime;
+
+            if (staminaRechargeCoroutine != null)
+            {
+                StopCoroutine(staminaRechargeCoroutine);
+                staminaRechargeCoroutine = null;
+            }
+
+            isRecharging = false;
         }
-        else if (Input.GetButtonUp("Sprint"))
+        else
         {
             isSprinting = false;
-            speed /= sprintMod;
+
+            if (!isRecharging && stamina < staminaOrig)
+            {
+                staminaRechargeCoroutine = StartCoroutine(RechargeStamina());
+            }
         }
+
+        speed = baseSpeed;
+        if (isSprinting) speed *= sprintMod;
+        if (isCrouching) speed /= crouchMod;
+        UpdatePlayerUI();
+    }
+
+    IEnumerator RechargeStamina()
+    {
+        isRecharging = true;
+
+        float waitTime = stamina <= 0 ? 4f : 2f;
+        yield return new WaitForSeconds(waitTime);
+        while (stamina < staminaOrig)
+        {
+            if (isSprinting)
+            {
+                isRecharging = false;
+                staminaRechargeCoroutine = null;
+                yield break;
+            }
+
+            stamina += 25f * Time.deltaTime;
+            UpdatePlayerUI();
+            yield return null;
+        }
+
+        isRecharging = false;
+        stamina = staminaOrig;
+        staminaRechargeCoroutine = null;
     }
 
     void Jump()
@@ -126,7 +173,7 @@ public class PlayerController : MonoBehaviour
 
     void UpdatePlayerUI()
     {
-        health -= 10;
         Gamemanager.instance.playerHealth.fillAmount = (float)health / healthOrig;
+        Gamemanager.instance.playerStamina.fillAmount = (float)stamina / staminaOrig;
     }
 }
