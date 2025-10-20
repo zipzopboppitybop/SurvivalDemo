@@ -32,6 +32,8 @@ public class PlayerController : MonoBehaviour
 
     void Movement()
     {
+        // If the character is grounded we make sure their jump count is reset and gravity doesn't affect them
+        // Otherwise apply gravity
         if (controller.isGrounded)
         {
             playerVel = Vector3.zero;
@@ -45,9 +47,8 @@ public class PlayerController : MonoBehaviour
         moveDir = Input.GetAxis("Horizontal") * transform.right + Input.GetAxis("Vertical") * transform.forward;
         controller.Move(moveDir * speed * Time.deltaTime);
 
-        controller.Move(playerVel * Time.deltaTime);
-
         Jump();
+        controller.Move(playerVel * Time.deltaTime);
     }
 
     void Sprint()
