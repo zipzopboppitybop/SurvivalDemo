@@ -207,7 +207,7 @@ MonoBehaviour:
   speed: 5
   sprintMod: 1.5
   crouchMod: 1.5
-  cameraCrouchSpeed: 2
+  cameraCrouchSpeed: 5
   jumpSpeed: 10
   jumpCountMax: 2
   gravity: 30

@@ -42,6 +42,8 @@ public class PlayerController : MonoBehaviour
         Sprint();
 
         Crouch();
+
+        UpdateCameraPosition();
     }
 
     void Movement()
@@ -96,7 +98,6 @@ public class PlayerController : MonoBehaviour
             speed /= crouchMod;
             controller.height /= 2;
             controller.center = playerCrouchingCenter; 
-            playerCamera.transform.localPosition = cameraCrouchingPos;
         }
         else if (Input.GetButtonUp("Crouch"))
         {
@@ -104,7 +105,16 @@ public class PlayerController : MonoBehaviour
             speed *= crouchMod;
             controller.height *= 2;
             controller.center = playerOriginalCenter;
-            playerCamera.transform.localPosition = cameraOriginalPos;
         }
+    }
+
+    void UpdateCameraPosition()
+    {
+        Vector3 targetPos = isCrouching ? cameraCrouchingPos : cameraOriginalPos;
+        playerCamera.transform.localPosition = Vector3.Lerp(
+            playerCamera.transform.localPosition,
+            targetPos,
+            Time.deltaTime * cameraCrouchSpeed
+        );
     }
 }
