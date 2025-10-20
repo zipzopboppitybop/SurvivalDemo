@@ -123,4 +123,10 @@ public class PlayerController : MonoBehaviour
             Time.deltaTime * cameraCrouchSpeed
         );
     }
+
+    void UpdatePlayerUI()
+    {
+        health -= 10;
+        Gamemanager.instance.playerHealth.fillAmount = (float)health / healthOrig;
+    }
 }
