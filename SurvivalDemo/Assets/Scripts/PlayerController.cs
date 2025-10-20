@@ -5,6 +5,8 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] CharacterController controller;
     [SerializeField] Camera playerCamera;
+    [SerializeField] int health;
+    [SerializeField] int stamina;
     [SerializeField] float speed;
     [SerializeField] float sprintMod;
     [SerializeField] float crouchMod;
@@ -24,10 +26,14 @@ public class PlayerController : MonoBehaviour
     bool isCrouching;
 
     int jumpCount;
+    int healthOrig;
+    int staminaOrig;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        healthOrig = health;
+        staminaOrig = stamina;
         playerOriginalCenter = controller.center;
         playerCrouchingCenter = new Vector3(0, -.5f, 0);
         cameraOriginalPos = playerCamera.transform.localPosition;

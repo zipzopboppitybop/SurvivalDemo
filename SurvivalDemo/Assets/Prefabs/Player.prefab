@@ -204,6 +204,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   controller: {fileID: 88037211322922010}
   playerCamera: {fileID: 5195940285480676493}
+  health: 100
+  stamina: 100
   speed: 5
   sprintMod: 1.5
   crouchMod: 1.5
