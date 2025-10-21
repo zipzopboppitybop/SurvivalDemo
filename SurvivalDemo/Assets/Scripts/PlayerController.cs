@@ -85,6 +85,11 @@ public class PlayerController : MonoBehaviour, IPickup
 
                     lastLookedAtItem = item;
                 }
+
+                if (Input.GetButtonDown("Interact"))
+                {
+                    Destroy(item.gameObject);
+                }
             }
             else
             {

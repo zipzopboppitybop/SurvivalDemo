@@ -12,14 +12,9 @@ public class Pickup : MonoBehaviour
         nameText.text = item.name;
     }
 
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    IPickup pickup = other.GetComponent<IPickup>();
+   private void PickUpItem()
+    {
+        Destroy(gameObject);  
+    }
 
-    //    if (pickup != null)
-    //    {
-    //        pickup.GetItemData(item);
-    //        Destroy(gameObject);
-    //    }
-    //}
 }
