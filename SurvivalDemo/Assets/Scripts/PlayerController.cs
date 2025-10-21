@@ -146,6 +146,14 @@ public class PlayerController : MonoBehaviour
             jumpCount++;
             stamina -= 10f;
             isJumping = true;
+
+            if (staminaRechargeCoroutine != null)
+            {
+                StopCoroutine(staminaRechargeCoroutine);
+                staminaRechargeCoroutine = null;
+            }
+
+            isRecharging = false;
         }
     }
 
