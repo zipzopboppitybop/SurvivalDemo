@@ -78,9 +78,12 @@ public class PlayerController : MonoBehaviour, IPickup
                 if (item != lastLookedAtItem)
                 {
                     if (lastLookedAtItem != null)
-                        lastLookedAtItem.nameText.gameObject.SetActive(false);
+                    {
+                        lastLookedAtItem.nameText.alpha = 0f;
+                    }
+                        
 
-                    item.nameText.gameObject.SetActive(true);
+                    item.nameText.alpha = 255f;
                     GetItemData(item.item);
 
                     lastLookedAtItem = item;
@@ -95,7 +98,7 @@ public class PlayerController : MonoBehaviour, IPickup
             {
                 if (lastLookedAtItem != null)
                 {
-                    lastLookedAtItem.nameText.gameObject.SetActive(false);
+                    lastLookedAtItem.nameText.alpha = 0f;
                     lastLookedAtItem = null;
                 }
             }
@@ -104,7 +107,7 @@ public class PlayerController : MonoBehaviour, IPickup
         {
             if (lastLookedAtItem != null)
             {
-                lastLookedAtItem.nameText.gameObject.SetActive(false);
+                lastLookedAtItem.nameText.alpha = 0f;
                 lastLookedAtItem = null;
             }
         }

@@ -10,6 +10,7 @@ public class Pickup : MonoBehaviour
     private void Start()
     {
         nameText.text = item.name;
+        nameText.alpha = 0f;
     }
 
    private void PickUpItem()
