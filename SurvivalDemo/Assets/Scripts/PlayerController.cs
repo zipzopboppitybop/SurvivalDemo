@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour, IPickup
     private Vector3 cameraOriginalPos;
     private Vector3 cameraCrouchingPos;
     private Coroutine staminaRechargeCoroutine;
+    private Pickup lastLookedAtItem;
 
     bool isSprinting;
     bool isCrouching;
@@ -52,6 +53,8 @@ public class PlayerController : MonoBehaviour, IPickup
     // Update is called once per frame
     void Update()
     {
+        HandeItemLook();
+
         Movement();
 
         Sprint();
@@ -59,6 +62,47 @@ public class PlayerController : MonoBehaviour, IPickup
         Crouch();
 
         UpdateCameraPosition();
+    }
+
+    void HandeItemLook()
+    {
+        RaycastHit hit;
+        UnityEngine.Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * 20f, Color.red);
+
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, 20f))
+        {
+            Pickup item = hit.collider.GetComponent<Pickup>();
+
+            if (item != null)
+            {
+                if (item != lastLookedAtItem)
+                {
+                    if (lastLookedAtItem != null)
+                        lastLookedAtItem.nameText.gameObject.SetActive(false);
+
+                    item.nameText.gameObject.SetActive(true);
+                    GetItemData(item.item);
+
+                    lastLookedAtItem = item;
+                }
+            }
+            else
+            {
+                if (lastLookedAtItem != null)
+                {
+                    lastLookedAtItem.nameText.gameObject.SetActive(false);
+                    lastLookedAtItem = null;
+                }
+            }
+        }
+        else
+        {
+            if (lastLookedAtItem != null)
+            {
+                lastLookedAtItem.nameText.gameObject.SetActive(false);
+                lastLookedAtItem = null;
+            }
+        }
     }
 
     void Movement()
@@ -204,6 +248,6 @@ public class PlayerController : MonoBehaviour, IPickup
 
     public void GetItemData(ItemData item)
     {
-        UnityEngine.Debug.Log("Item Name" +  item.name);
+        UnityEngine.Debug.Log(item.name);
     }
 }
