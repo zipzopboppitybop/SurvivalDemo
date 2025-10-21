@@ -11,6 +11,9 @@ public class Gamemanager : MonoBehaviour
 
     public Image playerHealth;
     public Image playerStamina;
+    public GameObject playerHealthBar;
+    public GameObject playerStaminaBar;
+    public bool showStamina;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -24,6 +27,11 @@ public class Gamemanager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        ShowStamina();
+    }
+
+    void ShowStamina()
+    {
+        playerStaminaBar.gameObject.SetActive(showStamina);
     }
 }

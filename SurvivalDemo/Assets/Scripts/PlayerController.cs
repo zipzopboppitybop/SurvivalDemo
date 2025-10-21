@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -27,6 +29,7 @@ public class PlayerController : MonoBehaviour
     bool isSprinting;
     bool isCrouching;
     bool isRecharging;
+    bool isJumping;
 
     int jumpCount;
     float healthOrig;
@@ -69,6 +72,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             playerVel.y -= gravity * Time.deltaTime;
+            isJumping = false;
         }
 
         moveDir = Input.GetAxis("Horizontal") * transform.right + Input.GetAxis("Vertical") * transform.forward;
@@ -117,7 +121,7 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(waitTime);
         while (stamina < staminaOrig)
         {
-            if (isSprinting)
+            if (isSprinting || isJumping)
             {
                 isRecharging = false;
                 staminaRechargeCoroutine = null;
@@ -136,10 +140,12 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-        if (Input.GetButtonDown("Jump") && jumpCount < jumpCountMax)
+        if (Input.GetButtonDown("Jump") && jumpCount < jumpCountMax && stamina > 9)
         {
             playerVel.y = jumpSpeed;
             jumpCount++;
+            stamina -= 10f;
+            isJumping = true;
         }
     }
 
@@ -173,7 +179,17 @@ public class PlayerController : MonoBehaviour
 
     void UpdatePlayerUI()
     {
-        Gamemanager.instance.playerHealth.fillAmount = (float)health / healthOrig;
-        Gamemanager.instance.playerStamina.fillAmount = (float)stamina / staminaOrig;
+        Gamemanager gamemanager = Gamemanager.instance;
+        gamemanager.playerHealth.fillAmount = (float)health / healthOrig;
+        gamemanager.playerStamina.fillAmount = (float)stamina / staminaOrig;
+
+        if (isSprinting || isJumping || isRecharging)
+        {
+            gamemanager.showStamina = true;
+        }
+        else
+        {
+            gamemanager.showStamina = false;
+        }
     }
 }
