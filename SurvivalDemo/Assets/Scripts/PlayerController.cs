@@ -3,8 +3,9 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using TMPro;
+using JetBrains.Annotations;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IPickup
 {
     [SerializeField] CharacterController controller;
     [SerializeField] Camera playerCamera;
@@ -199,5 +200,10 @@ public class PlayerController : MonoBehaviour
         {
             gamemanager.showStamina = false;
         }
+    }
+
+    public void GetItemData(ItemData item)
+    {
+        UnityEngine.Debug.Log("Item Name" +  item.name);
     }
 }
